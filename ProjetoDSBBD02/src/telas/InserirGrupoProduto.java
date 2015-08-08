@@ -137,7 +137,14 @@ public class InserirGrupoProduto extends JDialog {
 		// TODO Auto-generated method stub		
 		
 		try {
+			
 			ManipulacaoGrupoProduto.inserir(txtNome.getText(), Float.parseFloat(txtPromocao.getText()), Float.parseFloat(txtMargemLucro.getText()), conexao);
+			txtNome.setText("");
+			txtNome.requestFocus();
+			txtPromocao.setText("");
+			txtMargemLucro.setText("");
+			
+			System.out.println("teste inserir");
 		} catch (NumberFormatException e1) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(this, e1.getMessage());

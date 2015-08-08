@@ -6,17 +6,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
 import entidades.GrupoProduto;
 import exception.NegocioException;
-import model.GrupoProdutoTableModel;
 
 public class ManipulacaoGrupoProduto {
 
 	public static void inserir(String nome, float margem, float promocao, Connection conexao) throws NegocioException {
 		PreparedStatement comando = null;			
-		
+		String erro = validarDados(nome, promocao, margem);
+	    if ( !erro.isEmpty()){
+	    	throw new NegocioException(erro);
+	    }
+	
 		try {
 			comando = conexao.prepareStatement("INSERT INTO GRUPOPRODUTO(NOME, PROMOCAO, MARGEMLUCRO) VALUES (?,?,?)");
 			
@@ -94,6 +95,24 @@ public class ManipulacaoGrupoProduto {
 			throw new NegocioException(NegocioException.ERRO_DELECAO);
 		}
 		
+		
 	}
+	
+	  public static String validarDados(String nome, float promocao,float margemLucro){
+			String menssagemErros = "";
+			if(nome.length()==0){
+				menssagemErros += "Nome não ser vazio";
+			}
+			
+			if(margemLucro <0){
+			   menssagemErros +="\n A margem de Lucro não pode ser negativa";
+		    }
+			if(promocao <0 || promocao >100){
+				menssagemErros +="\n O percentual de Promoção deve ser entre 0 e 100";
+			}
+			return menssagemErros;
+
+	
+}
 
 }
