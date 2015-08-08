@@ -1,17 +1,17 @@
 package entidades;
 
-public class RegistroCaixa {
+public class RegistroBaixa {
 	
 	private int codigo;
 	private int motivo;
 	private int quantidade;
 	private Produto produto;
 	
-	public RegistroCaixa() {
+	public RegistroBaixa() {
 		
 	}
 	
-	public RegistroCaixa(int codigo, int motivo, int quantidade, Produto produto) {
+	public RegistroBaixa(int codigo, int motivo, int quantidade, Produto produto) {
 		super();
 		this.codigo = codigo;
 		this.motivo = motivo;
