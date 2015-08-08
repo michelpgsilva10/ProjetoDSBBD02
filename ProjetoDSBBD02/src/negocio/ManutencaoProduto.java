@@ -100,29 +100,42 @@ public class ManutencaoProduto {
 	public static ArrayList<Produto> listarProduto(Connection conexao) throws NegocioException {
 		
 		PreparedStatement comando = null;
-		ArrayList<Produto> grupoProdutos = new ArrayList<Produto>();
+		ArrayList<Produto> Produto = new ArrayList<Produto>();
 		Produto itemProduto;
+		GrupoProduto itemGrupo;
 
 		try {
-			comando = conexao.prepareStatement("SELECT * FROM produto ORDER BY nome");
+			comando = conexao.prepareStatement("SELECT prod.codigo AS codigo_prod,  prod.nome as nome_prod,  prod.estoque as estoque_prod, "
+					+ "prod.valorcompra AS valorcompra_prod, prod.promocao AS promocao_prod,prod.margemlucro AS margem_prod, gp.codigo AS codigo_grupo, "
+					+ "gp.nome AS nome_grupo, gp.promocao AS  promocao_grupo, gp.margemlucro AS  margem_grupo  "
+					+ "FROM produto prod JOIN grupoproduto gp ON gp.codigo = prod.grupo ORDER BY prod.nome");
 
 			ResultSet resultado = comando.executeQuery();
 
 			while (resultado.next()) {
 				itemProduto = new Produto();
+				itemGrupo = new GrupoProduto();
 				
-				itemProduto.setCodigo(resultado.getInt("codigo"));
-				itemProduto.setNome(resultado.getString("nome"));
-				itemProduto.setEstoque(resultado.getInt("estoque"));			
+				itemProduto.setCodigo(resultado.getInt("codigo_prod"));
+				itemProduto.setNome(resultado.getString("nome_prod"));
+				itemProduto.setEstoque(resultado.getInt("estoque_prod"));
+				itemProduto.setPrecoCompra(resultado.getFloat("valorcompra_prod"));
+				itemProduto.setPromocao(resultado.getFloat("promocao_prod"));
+				itemProduto.setMargemLucro(resultado.getFloat("margem_prod"));
+				itemGrupo.setCodigo(resultado.getInt("codigo_grupo"));
+				itemGrupo.setNome(resultado.getString("nome_grupo"));
+				itemGrupo.setPromocao(resultado.getFloat("promocao_grupo"));
+				itemGrupo.setMargemLucro(resultado.getFloat("margem_grupo"));
+				itemProduto.setGrupoProduto(itemGrupo);
+				Produto.add(itemProduto);
 				
-				grupoProdutos.add(itemProduto);
 			}
 			resultado.close();						
 		} catch (SQLException se) {
-			throw new NegocioException(NegocioException.ERRO_BUSCA);
+			throw new NegocioException(se.getMessage());
 		}
 		
-		return grupoProdutos;
+		return Produto;
 	}
 	
 			
@@ -151,20 +164,23 @@ public class ManutencaoProduto {
 	
 }
   
-  public static void porFiltroNome(String nome, Connection conexao)throws NegocioException {
-		 PreparedStatement comando = null;	
+
+  public static ArrayList<Produto> porFiltarNome(String nome, Connection conexao)throws NegocioException {
+		PreparedStatement comando = null;
+		ArrayList<Produto> Produto = new ArrayList<Produto>();
 			try{
 				comando = conexao.prepareStatement("SELECT * FROM produto WHERE upper(nome) like ?");
 				comando.setString(1, "%"+ nome.toUpperCase() + "%");
 								
 				comando.executeQuery();
+				
 			}
 			catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				throw new NegocioException(NegocioException.ERRO_BUSCA);
 			}
 			
-		
+			return Produto;
 				
 			
 		}

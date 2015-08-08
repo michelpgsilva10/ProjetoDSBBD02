@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import entidades.Produto;
 import exception.NegocioException;
+import model.EstoqueProdutoTableModel;
 import negocio.ManutencaoProduto;
 import util.ConexaoBD;
 
@@ -25,7 +26,7 @@ import java.awt.event.ActionEvent;
 public class PrincipalEstoqueProduto extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField txtFiltro;
 	private JTable table;
 	private ArrayList<Produto> produtos;
 
@@ -58,6 +59,8 @@ public class PrincipalEstoqueProduto extends JFrame {
 			JOptionPane.showMessageDialog(this, e1.getMessage());
 		}
 		
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -71,13 +74,23 @@ public class PrincipalEstoqueProduto extends JFrame {
 		JLabel lblNewLabel = new JLabel("Produto:");
 		panel.add(lblNewLabel);
 		
-		textField = new JTextField();
-		panel.add(textField);
-		textField.setColumns(10);
+		txtFiltro = new JTextField();
+		panel.add(txtFiltro);
+		txtFiltro.setColumns(10);
 		
 		JButton btnFiltrar = new JButton("Filtrar");
 		btnFiltrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				ConexaoBD conexaoBanco = new ConexaoBD();
+				
+				try{
+					produtos = ManutencaoProduto.porFiltarNome(txtFiltro.getText(), conexaoBanco.getConexao());
+				}catch (NegocioException e1) {
+					// TODO Auto-generated catch block
+				//	JOptionPane.showMessageDialog(this, e1.getMessage());
+				}
+				
+				
 			}
 		});
 		panel.add(btnFiltrar);
@@ -98,7 +111,9 @@ public class PrincipalEstoqueProduto extends JFrame {
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
 		table = new JTable();
+		table.setModel(new EstoqueProdutoTableModel(produtos));
 		scrollPane.setViewportView(table);
+	
 	}
 
 }
