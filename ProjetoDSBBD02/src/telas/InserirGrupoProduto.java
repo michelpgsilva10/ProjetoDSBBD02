@@ -6,6 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import exception.NegocioException;
+import negocio.ManipulacaoGrupoProduto;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -138,24 +141,13 @@ public class InserirGrupoProduto extends JDialog {
 		double margemLucro = Double.parseDouble(txtMargemLucro.getText());		
 		
 		try {
-			comando = conexao.prepareStatement("INSERT INTO GRUPOPRODUTO(NOME, PROMOCAO, MARGEMLUCRO) VALUES (?,?,?)");
-			
-			comando.setString(1, nome);
-			comando.setDouble(2, promocao);
-			comando.setDouble(3, margemLucro);
-			
-			comando.executeUpdate();
-			
-			JOptionPane.showMessageDialog(this, "Registro inserido com sucesso");
-			
-			txtNome.setText("");
-			txtPromocao.setText("");
-			txtMargemLucro.setText("");
-			
-			txtNome.requestFocus();
-		} catch (SQLException e1) {
+			ManipulacaoGrupoProduto.inserir(txtNome.getText(), Float.parseFloat(txtPromocao.getText()), Float.parseFloat(txtMargemLucro.getText()), conexao, this);
+		} catch (NumberFormatException e1) {
 			// TODO Auto-generated catch block
-			JOptionPane.showMessageDialog(this, "Não foi possível inserir");
+			JOptionPane.showMessageDialog(this, e1.getMessage());
+		} catch (NegocioException e2) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e2.getMessage());
 		}
 		
 	}
