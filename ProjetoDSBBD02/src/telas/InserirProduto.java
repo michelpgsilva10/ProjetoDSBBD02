@@ -7,11 +7,21 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import exception.NegocioException;
+import model.GrupoProdutoComboBoxModel;
+import negocio.ManipulacaoGrupoProduto;
+
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -25,30 +35,18 @@ public class InserirProduto extends JDialog {
 	private JTextField txtCompra;
 	private JTextField txtMargemLucro;
 	private JTextField txtPromocao;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			InserirProduto dialog = new InserirProduto();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	private JButton btnSalvar;
 
 	/**
 	 * Create the dialog.
 	 */
-	public InserirProduto() {
+	public InserirProduto(Connection conexao) {
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.WEST);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
-		gbl_contentPanel.columnWidths = new int[] {162, 266};
+		gbl_contentPanel.columnWidths = new int[] {162, 265};
 		gbl_contentPanel.rowHeights = new int[] {0, 0};
 		gbl_contentPanel.columnWeights = new double[]{1.0, 1.0};
 		gbl_contentPanel.rowWeights = new double[]{1.0};
@@ -154,8 +152,8 @@ public class InserirProduto extends JDialog {
 				panel.add(panel_1);
 				{
 					txtNome = new JTextField();
-					panel_1.add(txtNome);
-					txtNome.setColumns(30);
+					txtNome.setColumns(22);
+					panel_1.add(txtNome);				
 				}
 			}
 			{
@@ -165,8 +163,8 @@ public class InserirProduto extends JDialog {
 				panel.add(panel_1);
 				{
 					txtEstoque = new JTextField();
-					panel_1.add(txtEstoque);
-					txtEstoque.setColumns(15);
+					txtEstoque.setColumns(10);
+					panel_1.add(txtEstoque);					
 				}
 			}
 			{
@@ -176,8 +174,8 @@ public class InserirProduto extends JDialog {
 				panel.add(panel_1);
 				{
 					txtCompra = new JTextField();
-					panel_1.add(txtCompra);
-					txtCompra.setColumns(15);
+					txtCompra.setColumns(10);
+					panel_1.add(txtCompra);					
 				}
 			}
 			{
@@ -187,8 +185,8 @@ public class InserirProduto extends JDialog {
 				panel.add(panel_1);
 				{
 					txtMargemLucro = new JTextField();
-					panel_1.add(txtMargemLucro);
-					txtMargemLucro.setColumns(15);
+					txtMargemLucro.setColumns(10);
+					panel_1.add(txtMargemLucro);					
 				}
 			}
 			{
@@ -198,8 +196,8 @@ public class InserirProduto extends JDialog {
 				panel.add(panel_1);
 				{
 					txtPromocao = new JTextField();
-					panel_1.add(txtPromocao);
-					txtPromocao.setColumns(15);
+					txtPromocao.setColumns(10);
+					panel_1.add(txtPromocao);					
 				}
 			}
 			{
@@ -209,6 +207,12 @@ public class InserirProduto extends JDialog {
 				panel.add(panel_1);
 				{
 					JComboBox cmbGrupoProduto = new JComboBox();
+					try {
+						cmbGrupoProduto.setModel(new GrupoProdutoComboBoxModel(ManipulacaoGrupoProduto.listarGrupoProduto(conexao)));
+					} catch (NegocioException e) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(this, e.getMessage());
+					}
 					panel_1.add(cmbGrupoProduto);
 				}
 			}
@@ -218,17 +222,31 @@ public class InserirProduto extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
+				JButton btnSair = new JButton("Sair");				
+				buttonPane.add(btnSair);				
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
+				btnSalvar = new JButton("Salvar");
+				buttonPane.add(btnSalvar);
+				getRootPane().setDefaultButton(btnSalvar);
+				
+				
 			}
 		}
+		
+		btnSalvar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				btnSalvar_actionPerformed(e, conexao);
+			}
+		});
+	}
+
+	protected void btnSalvar_actionPerformed(ActionEvent e, Connection conexao) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

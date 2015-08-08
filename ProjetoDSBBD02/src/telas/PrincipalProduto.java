@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
@@ -80,12 +81,8 @@ public class PrincipalProduto extends JFrame {
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.SOUTH);
 		
-		JButton btnNewButton = new JButton("Incluir");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		panel_1.add(btnNewButton);
+		JButton btnInserir = new JButton("Incluir");		
+		panel_1.add(btnInserir);		
 		
 		JButton btnAlterar = new JButton("Alterar");
 		panel_1.add(btnAlterar);
@@ -112,6 +109,24 @@ public class PrincipalProduto extends JFrame {
 		tblProduto = new JTable();
 		tblProduto.setModel(new ProdutoTableModel(produtos));
 		scrollPane.setViewportView(tblProduto);
+		
+		btnInserir.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				btnInserir_actionPerformed(e, conexao.getConexao());
+			}
+		});
+	}
+
+	protected void btnInserir_actionPerformed(ActionEvent e, Connection conexao) {
+		// TODO Auto-generated method stub
+		InserirProduto inserirProduto = new InserirProduto(conexao);
+		inserirProduto.setLocationRelativeTo(this);
+		//inserirProduto.setResizable(false);
+		inserirProduto.setModal(true);
+		inserirProduto.setVisible(true);
 	}
 
 }
