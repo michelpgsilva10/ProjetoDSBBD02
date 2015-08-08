@@ -9,7 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import entidades.GrupoProduto;
+import exception.NegocioException;
 import model.GrupoProdutoTableModel;
+import negocio.ManipulacaoGrupoProduto;
 import util.ConexaoBD;
 
 import java.awt.FlowLayout;
@@ -53,7 +55,12 @@ public class PrincipalGrupoProduto extends JFrame {
 	public PrincipalGrupoProduto() {
 		ConexaoBD conexaoBanco = new ConexaoBD();
 		
-		produtos = listarProdutos(conexaoBanco.getConexao());
+		try {
+			produtos = ManipulacaoGrupoProduto.listarGrupoProduto(conexaoBanco.getConexao());
+		} catch (NegocioException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e1.getMessage());
+		}
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -137,21 +144,16 @@ public class PrincipalGrupoProduto extends JFrame {
 		int resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir o produto \"" + produtos.get(table.getSelectedRow()).getNome() + "\"");
 		
 		if (JOptionPane.YES_OPTION == resposta) {
-			PreparedStatement comando = null;
+			
 			try {
-				comando = conexao.prepareStatement("DELETE FROM GRUPOPRODUTO WHERE CODIGO = ?");
-				comando.setInt(1, produtos.get(table.getSelectedRow()).getCodigo());
-				comando.executeUpdate();
-				
-				JOptionPane.showMessageDialog(this, "Registro apagado com sucesso");
-				
-				table.setModel(new GrupoProdutoTableModel(listarProdutos(conexao)));
-				
-			} catch (SQLException e1) {
+				ManipulacaoGrupoProduto.deletarGrupoProduto(produtos.get(table.getSelectedRow()), conexao);
+				table.setModel(new GrupoProdutoTableModel(ManipulacaoGrupoProduto.listarGrupoProduto(conexao)));
+			} catch (NegocioException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}
+			
 			}			
-		}
 		
 		} else
 			JOptionPane.showMessageDialog(this, "Selecione um produto na tabela!");
@@ -159,23 +161,30 @@ public class PrincipalGrupoProduto extends JFrame {
 
 	protected void btnAtualizar_actionPerformed(ActionEvent e, Connection conexao) {
 		
-		produtos = listarProdutos(conexao);
-		
-		if (table.getSelectedRow() != -1) {
-			GrupoProduto produto = produtos.get(table.getSelectedRow());
+		try {
+			produtos = ManipulacaoGrupoProduto.listarGrupoProduto(conexao);
 			
-			AtualizarGrupoProduto telaAtualizar = new AtualizarGrupoProduto(conexao,produto);	
-			telaAtualizar.setLocationRelativeTo(this);
-			telaAtualizar.setResizable(false);
-			telaAtualizar.setModal(true);
-			telaAtualizar.setVisible(true);
-		} else
-			JOptionPane.showMessageDialog(this, "Selecione um produto na tabela!");
+			if (table.getSelectedRow() != -1) {
+				GrupoProduto produto = produtos.get(table.getSelectedRow());
+				
+				AtualizarGrupoProduto telaAtualizar = new AtualizarGrupoProduto(conexao,produto);	
+				telaAtualizar.setLocationRelativeTo(this);
+				telaAtualizar.setResizable(false);
+				telaAtualizar.setModal(true);
+				telaAtualizar.setVisible(true);
+				
+				produtos = ManipulacaoGrupoProduto.listarGrupoProduto(conexao);
+				
+			
+			} else
+				JOptionPane.showMessageDialog(this, "Selecione um produto na tabela!");
+			
+		} catch (NegocioException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e1.getMessage());
+		}		
 		
-		produtos = listarProdutos(conexao);
-		
-		table.setModel(new GrupoProdutoTableModel(produtos));
-		
+		table.setModel(new GrupoProdutoTableModel(produtos));		
 		
 	}
 
@@ -188,36 +197,13 @@ public class PrincipalGrupoProduto extends JFrame {
 		telaInserir.setResizable(false);
 		telaInserir.setVisible(true);
 		
-		table.setModel(new GrupoProdutoTableModel(listarProdutos(conexao)));
-		
-	}
-
-	public ArrayList<GrupoProduto> listarProdutos(Connection conexao) {
-		PreparedStatement comando = null;
-		ArrayList<GrupoProduto> produtos = new ArrayList<GrupoProduto>();
-		GrupoProduto itemProduto;
-
 		try {
-			comando = conexao.prepareStatement("SELECT * FROM grupoproduto ORDER BY nome");
-
-			ResultSet resultado = comando.executeQuery();
-
-			while (resultado.next()) {
-				itemProduto = new GrupoProduto();
-				
-				itemProduto.setCodigo(resultado.getInt("codigo"));
-				itemProduto.setNome(resultado.getString("nome"));
-				itemProduto.setPromocao(resultado.getFloat("promocao"));
-				itemProduto.setMargemLucro(resultado.getFloat("margemlucro"));
-				
-				produtos.add(itemProduto);
-			}
-			resultado.close();						
-		} catch (SQLException ex) {
-			JOptionPane.showMessageDialog(null, "Erro na Busca!!!");
+			table.setModel(new GrupoProdutoTableModel(ManipulacaoGrupoProduto.listarGrupoProduto(conexao)));
+		} catch (NegocioException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e1.getMessage());
 		}
 		
-		return produtos;
 	}
 
 }

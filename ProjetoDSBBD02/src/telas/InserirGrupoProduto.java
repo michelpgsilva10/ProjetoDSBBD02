@@ -134,14 +134,10 @@ public class InserirGrupoProduto extends JDialog {
 	}
 
 	protected void btnSalvar_actionPerformed(ActionEvent e, Connection conexao) {
-		// TODO Auto-generated method stub
-		PreparedStatement comando = null;
-		String nome = txtNome.getText();
-		double promocao = Double.parseDouble(txtPromocao.getText());
-		double margemLucro = Double.parseDouble(txtMargemLucro.getText());		
+		// TODO Auto-generated method stub		
 		
 		try {
-			ManipulacaoGrupoProduto.inserir(txtNome.getText(), Float.parseFloat(txtPromocao.getText()), Float.parseFloat(txtMargemLucro.getText()), conexao, this);
+			ManipulacaoGrupoProduto.inserir(txtNome.getText(), Float.parseFloat(txtPromocao.getText()), Float.parseFloat(txtMargemLucro.getText()), conexao);
 		} catch (NumberFormatException e1) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(this, e1.getMessage());

@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import entidades.GrupoProduto;
+import exception.NegocioException;
+import negocio.ManipulacaoGrupoProduto;
 
 import java.awt.GridLayout;
 import javax.swing.JLabel;
@@ -154,31 +156,18 @@ public class AtualizarGrupoProduto extends JDialog {
 
 	protected void btnSalvar_actionPerformed(ActionEvent e, Connection conexao) {
 		// TODO Auto-generated method stub
-		PreparedStatement comando = null;
-		String nome = txtNome.getText();
-		int codigo = Integer.parseInt(txtCodigo.getText());
-		double promocao = Double.parseDouble(txtPromocao.getText());
-		double margemLucro = Double.parseDouble(txtMargemLucro.getText());		
+		GrupoProduto grupoProduto = new GrupoProduto();
 		
+		 grupoProduto.setCodigo(Integer.parseInt(txtCodigo.getText()));
+		 grupoProduto.setNome(txtNome.getText());
+		 grupoProduto.setMargemLucro(Float.parseFloat(txtMargemLucro.getText()));
+		 grupoProduto.setPromocao(Float.parseFloat(txtPromocao.getText()));
 		try {
-			comando = conexao.prepareStatement("UPDATE GRUPOPRODUTO"
-					+ " SET NOME=?,PROMOCAO=?,MARGEMLUCRO=? WHERE CODIGO=?");
-			System.out.println(comando.getWarnings());
-			
-			comando.setString(1, nome);
-			comando.setDouble(2, promocao);
-			comando.setDouble(3, margemLucro);
-			comando.setInt(4, codigo);
-			comando.executeUpdate();
-			
-			JOptionPane.showMessageDialog(this, "Registro atualizado com sucesso");
-			
-		    //this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		    this.dispose();
-		    System.out.println("TEste");
-		} catch (SQLException e1) {
+			ManipulacaoGrupoProduto.alterar(grupoProduto, conexao);
+			this.dispose();
+		} catch (NegocioException e1) {
 			// TODO Auto-generated catch block
-			JOptionPane.showMessageDialog(this, "Não foi possível atualizar");
+			JOptionPane.showMessageDialog(this, e1.getMessage());
 		}
 		
 		
