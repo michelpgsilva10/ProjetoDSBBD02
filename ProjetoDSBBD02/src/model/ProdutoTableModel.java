@@ -12,6 +12,10 @@ public class ProdutoTableModel implements TableModel {
 
 	private ArrayList<Produto> produtos;
 	
+	public ProdutoTableModel(ArrayList<Produto> produtos) {
+		setProdutos(produtos);
+	}
+	
 	@Override
 	public void addTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub

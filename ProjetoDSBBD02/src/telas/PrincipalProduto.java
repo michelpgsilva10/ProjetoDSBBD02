@@ -6,10 +6,19 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import entidades.Produto;
+import exception.NegocioException;
+import model.ProdutoTableModel;
+import negocio.ManutencaoProduto;
+import util.ConexaoBD;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 import javax.swing.JScrollPane;
@@ -20,6 +29,7 @@ public class PrincipalProduto extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtBuscaProduto;
 	private JTable tblProduto;
+	private ArrayList<Produto> produtos;
 
 	/**
 	 * Launch the application.
@@ -41,8 +51,10 @@ public class PrincipalProduto extends JFrame {
 	 * Create the frame.
 	 */
 	public PrincipalProduto() {
+		ConexaoBD conexao = new ConexaoBD();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 800, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -90,7 +102,15 @@ public class PrincipalProduto extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
+		try {
+			produtos = ManutencaoProduto.listarProduto(conexao.getConexao());
+		} catch (NegocioException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e1.getMessage());
+		}
+		
 		tblProduto = new JTable();
+		tblProduto.setModel(new ProdutoTableModel(produtos));
 		scrollPane.setViewportView(tblProduto);
 	}
 
