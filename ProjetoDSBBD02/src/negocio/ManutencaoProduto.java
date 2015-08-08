@@ -3,10 +3,14 @@ package negocio;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JDialog;
 
+import entidades.GrupoProduto;
+import entidades.Produto;
 import exception.NegocioException;
 
 public class ManutencaoProduto {
@@ -92,6 +96,35 @@ public class ManutencaoProduto {
 				throw new NegocioException(NegocioException.ERRO_INSERCAO);
 			}
 	}
+	
+	public static ArrayList<Produto> listarProduto(Connection conexao) throws NegocioException {
+		
+		PreparedStatement comando = null;
+		ArrayList<Produto> grupoProdutos = new ArrayList<Produto>();
+		Produto itemProduto;
+
+		try {
+			comando = conexao.prepareStatement("SELECT * FROM produto ORDER BY nome");
+
+			ResultSet resultado = comando.executeQuery();
+
+			while (resultado.next()) {
+				itemProduto = new Produto();
+				
+				itemProduto.setCodigo(resultado.getInt("codigo"));
+				itemProduto.setNome(resultado.getString("nome"));
+				itemProduto.setEstoque(resultado.getInt("estoque"));			
+				
+				grupoProdutos.add(itemProduto);
+			}
+			resultado.close();						
+		} catch (SQLException se) {
+			throw new NegocioException(NegocioException.ERRO_BUSCA);
+		}
+		
+		return grupoProdutos;
+	}
+	
 			
   public static String validarDados(String nome, int estoque, float compra,float margem, float promocao,int grupo){
 			String menssagemErros = "";
