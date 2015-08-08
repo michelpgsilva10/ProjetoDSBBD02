@@ -117,6 +117,30 @@ public class ManutencaoProduto {
   
 	
 }
+  
+  public static void porFiltroNome(int codigo,String nome,int estoque, float valorcompra, float promocao, float margem,float grupo, Connection conexao)throws NegocioException {
+		 PreparedStatement comando = null;	
+			try{
+				comando = conexao.prepareStatement("SELECT * FROM produto WHERE codigo = ?");
+				comando.setInt(1, codigo);
+				//comando.setDouble(2, estoque);
+				//comando.setDouble(3, valorcompra);
+				//comando.setDouble(4, promocao);
+				//comando.setDouble(5, margem);
+				//comando.setDouble(6, grupo);
+				//comando.setInt(7, codigo);
+				
+				comando.executeQuery();
+			}
+			catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				throw new NegocioException(NegocioException.ERRO_INSERCAO);
+			}
+			
+		
+				
+			
+		}
 	}
 
 
