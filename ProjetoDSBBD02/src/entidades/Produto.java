@@ -9,6 +9,14 @@ public class Produto {
 	private float promocao;
 	private GrupoProduto grupoProduto;
 	
+	public GrupoProduto getGrupoProduto() {
+		return grupoProduto;
+	}
+
+	public void setGrupoProduto(GrupoProduto grupoProduto) {
+		this.grupoProduto = grupoProduto;
+	}
+
 	public Produto() {
 		
 	}
@@ -27,40 +35,49 @@ public class Produto {
 	public int getCodigo() {
 		return codigo;
 	}
+	
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
+	
 	public String getNome() {
 		return nome;
 	}
+	
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	
 	public int getEstoque() {
 		return estoque;
 	}
+	
 	public void setEstoque(int estoque) {
 		this.estoque = estoque;
 	}
+	
 	public float getPrecoCompra() {
 		return precoCompra;
 	}
+	
 	public void setPrecoCompra(float precoCompra) {
 		this.precoCompra = precoCompra;
 	}
+	
 	public float getMargemLucro() {
 		return margemLucro;
 	}
+	
 	public void setMargemLucro(float margemLucro) {
 		this.margemLucro = margemLucro;
 	}
+	
 	public float getPromocao() {
 		return promocao;
 	}
+	
 	public void setPromocao(float promocao) {
 		this.promocao = promocao;
-	}
-	
-	
+	}	
 	
 }

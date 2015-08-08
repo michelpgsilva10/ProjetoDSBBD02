@@ -43,5 +43,11 @@ public class GrupoProduto {
 		this.promocao = promocao;
 	}
 	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return getNome();
+	}
+	
 	
 }
