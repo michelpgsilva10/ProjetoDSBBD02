@@ -117,6 +117,42 @@ public class ManutencaoProduto {
   
 	
 }
+  
+  public static void porFiltroNome(String nome, Connection conexao)throws NegocioException {
+		 PreparedStatement comando = null;	
+			try{
+				comando = conexao.prepareStatement("SELECT * FROM produto WHERE upper(nome) like ?");
+				comando.setString(1, "%"+ nome.toUpperCase() + "%");
+								
+				comando.executeQuery();
+			}
+			catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				throw new NegocioException(NegocioException.ERRO_BUSCA);
+			}
+			
+		
+				
+			
+		}
+  
+  public static void porCodigo(int codigo, Connection conexao)throws NegocioException {
+		 PreparedStatement comando = null;	
+			try{
+				comando = conexao.prepareStatement("SELECT * FROM produto WHERE codigo = ?");
+				comando.setInt(1, codigo);
+								
+				comando.executeQuery();
+			}
+			catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				throw new NegocioException(NegocioException.ERRO_BUSCA);
+			}
+			
+		
+				
+			
+		}
 	}
 
 
