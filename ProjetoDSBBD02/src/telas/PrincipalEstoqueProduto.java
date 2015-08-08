@@ -7,9 +7,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import entidades.GrupoProduto;
 import entidades.Produto;
 import exception.NegocioException;
 import model.EstoqueProdutoTableModel;
+import model.ProdutoTableModel;
 import negocio.ManutencaoProduto;
 import util.ConexaoBD;
 
@@ -20,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
@@ -81,14 +84,9 @@ public class PrincipalEstoqueProduto extends JFrame {
 		JButton btnFiltrar = new JButton("Filtrar");
 		btnFiltrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ConexaoBD conexaoBanco = new ConexaoBD();
+				//ConexaoBD conexaoBanco = new ConexaoBD();
+				btnFiltrar_actionPerformed(arg0, conexaoBanco.getConexao());
 				
-				try{
-					produtos = ManutencaoProduto.porFiltarNome(txtFiltro.getText(), conexaoBanco.getConexao());
-				}catch (NegocioException e1) {
-					// TODO Auto-generated catch block
-				//	JOptionPane.showMessageDialog(this, e1.getMessage());
-				}
 				
 				
 			}
@@ -114,6 +112,19 @@ public class PrincipalEstoqueProduto extends JFrame {
 		table.setModel(new EstoqueProdutoTableModel(produtos));
 		scrollPane.setViewportView(table);
 	
+	}
+
+	protected void btnFiltrar_actionPerformed(ActionEvent arg0, Connection conexao) {
+		// TODO Auto-generated method stub
+		String nome = txtFiltro.getText();
+		ArrayList<Produto> produtos = new ArrayList<Produto>();
+		try{
+			produtos = ManutencaoProduto.porFiltarNome(nome,conexao);
+			table.setModel(new EstoqueProdutoTableModel(produtos));
+		}catch (NegocioException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e1.getMessage());
+		}
 	}
 
 }

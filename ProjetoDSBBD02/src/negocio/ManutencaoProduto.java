@@ -8,10 +8,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JDialog;
+import javax.swing.JTable;
 
 import entidades.GrupoProduto;
 import entidades.Produto;
 import exception.NegocioException;
+import model.GrupoProdutoTableModel;
+import model.ProdutoTableModel;
 
 public class ManutencaoProduto {
 	public static void inserir(String nome,int estoque, float valorcompra, float promocao, float margem,float grupo, Connection conexao)throws NegocioException {
@@ -171,13 +174,25 @@ public class ManutencaoProduto {
 			try{
 				comando = conexao.prepareStatement("SELECT * FROM produto WHERE upper(nome) like ?");
 				comando.setString(1, "%"+ nome.toUpperCase() + "%");
-								
-				comando.executeQuery();
+				ResultSet resultado = comando.executeQuery();
+				Produto itemProduto;				
+				
+				while (resultado.next()) {
+					itemProduto = new Produto();
+					
+					itemProduto.setCodigo(resultado.getInt("codigo"));
+					itemProduto.setNome(resultado.getString("nome"));
+					itemProduto.setEstoque(resultado.getInt("estoque"));
+					
+					Produto.add(itemProduto);
+				}
+				resultado.close();
+			//	table.setModel(new ProdutoTableModel(Produto));
 				
 			}
 			catch (SQLException e1) {
 				// TODO Auto-generated catch block
-				throw new NegocioException(NegocioException.ERRO_BUSCA);
+				throw new NegocioException(e1.getMessage());
 			}
 			
 			return Produto;
