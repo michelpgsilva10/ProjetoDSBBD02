@@ -8,9 +8,11 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import entidades.GrupoProduto;
 import exception.NegocioException;
 import model.GrupoProdutoComboBoxModel;
 import negocio.ManipulacaoGrupoProduto;
+import negocio.ManutencaoProduto;
 
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -35,7 +37,9 @@ public class InserirProduto extends JDialog {
 	private JTextField txtCompra;
 	private JTextField txtMargemLucro;
 	private JTextField txtPromocao;
-	private JButton btnSalvar;
+	private JComboBox cmbGrupoProduto;
+	private JButton btnSalvar;	
+	private JButton btnSair;
 
 	/**
 	 * Create the dialog.
@@ -206,9 +210,9 @@ public class InserirProduto extends JDialog {
 				flowLayout.setAlignment(FlowLayout.LEFT);
 				panel.add(panel_1);
 				{
-					JComboBox cmbGrupoProduto = new JComboBox();
+					cmbGrupoProduto = new JComboBox();
 					try {
-						cmbGrupoProduto.setModel(new GrupoProdutoComboBoxModel(ManipulacaoGrupoProduto.listarGrupoProduto(conexao)));
+						cmbGrupoProduto.setModel(new GrupoProdutoComboBoxModel(ManipulacaoGrupoProduto.listarGrupoProduto(conexao)));						
 					} catch (NegocioException e) {
 						// TODO Auto-generated catch block
 						JOptionPane.showMessageDialog(this, e.getMessage());
@@ -222,7 +226,7 @@ public class InserirProduto extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnSair = new JButton("Sair");				
+				btnSair = new JButton("Sair");				
 				buttonPane.add(btnSair);				
 			}
 			{
@@ -242,11 +246,61 @@ public class InserirProduto extends JDialog {
 				btnSalvar_actionPerformed(e, conexao);
 			}
 		});
+		
+		btnSair.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				btnSair_actionPerformed(e);
+			}
+		});
+		
+		
+	}
+
+	protected void btnSair_actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		this.dispose();
 	}
 
 	protected void btnSalvar_actionPerformed(ActionEvent e, Connection conexao) {
 		// TODO Auto-generated method stub
+		String msgErros;
 		
+		try {
+			msgErros = ManutencaoProduto.validarDados(txtNome.getText(), Integer.parseInt(txtEstoque.getText()), Float.parseFloat(txtCompra.getText()),
+					  Float.parseFloat(txtPromocao.getText()), Float.parseFloat(txtMargemLucro.getText()), 
+					  ((GrupoProduto) cmbGrupoProduto.getSelectedItem()).getCodigo());
+			
+			if (msgErros.equals("")) {			
+				ManutencaoProduto.inserir(txtNome.getText(), Integer.parseInt(txtEstoque.getText()), Float.parseFloat(txtCompra.getText()),
+										  Float.parseFloat(txtPromocao.getText()), Float.parseFloat(txtMargemLucro.getText()), 
+										  ((GrupoProduto) cmbGrupoProduto.getSelectedItem()).getCodigo(), conexao);
+				
+				JOptionPane.showMessageDialog(this, "Registro inserido com sucesso!");
+				limparCamposCadastroProduto();
+			} else
+				throw new NegocioException(msgErros);
+				
+		} catch (NumberFormatException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e1.getMessage());
+		} catch (NegocioException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e1.getMessage());
+		}
+	}
+	
+	private void limparCamposCadastroProduto() {
+		txtNome.setText("");
+		txtEstoque.setText("");
+		txtCompra.setText("");
+		txtMargemLucro.setText("");
+		txtPromocao.setText("");
+		cmbGrupoProduto.setSelectedIndex(0);
+		
+		txtNome.requestFocus();
 	}
 
 }

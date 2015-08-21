@@ -69,8 +69,8 @@ public class ProdutoTableModel implements TableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
-		float margemLucro = getProdutos().get(rowIndex).getPrecoCompra() + (getProdutos().get(rowIndex).getPrecoCompra() * getProdutos().get(rowIndex).getMargemLucro()) / 100;
-		margemLucro = margemLucro * getProdutos().get(rowIndex).getPromocao() / 100;
+		float margemLucro = getProdutos().get(rowIndex).getPrecoCompra() + (getProdutos().get(rowIndex).getPrecoCompra() * getProdutos().get(rowIndex).getMargemLucro() / 100);
+		margemLucro -= margemLucro * getProdutos().get(rowIndex).getPromocao() / 100;
 		
 		switch (columnIndex) {
 		case 0: return getProdutos().get(rowIndex).getCodigo();

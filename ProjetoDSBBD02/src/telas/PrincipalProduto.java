@@ -118,6 +118,20 @@ public class PrincipalProduto extends JFrame {
 				btnInserir_actionPerformed(e, conexao.getConexao());
 			}
 		});
+		
+		btnSair.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				btnSair_actionPerformed(e);
+			}
+		});
+	}
+
+	protected void btnSair_actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		this.dispose();
 	}
 
 	protected void btnInserir_actionPerformed(ActionEvent e, Connection conexao) {
@@ -127,6 +141,13 @@ public class PrincipalProduto extends JFrame {
 		//inserirProduto.setResizable(false);
 		inserirProduto.setModal(true);
 		inserirProduto.setVisible(true);
+		
+		try {
+			tblProduto.setModel(new ProdutoTableModel(ManutencaoProduto.listarProduto(conexao)));
+		} catch (NegocioException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e1.getMessage());
+		}
 	}
 
 }
