@@ -7,8 +7,17 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import entidades.Produto;
+import exception.NegocioException;
+import negocio.ManipulacaoBaixaProduto;
+
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.sql.Connection;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class BaixarVencimento extends JDialog {
@@ -18,24 +27,9 @@ public class BaixarVencimento extends JDialog {
 	private JTextField txtNome;
 	private JTextField txtQuantidade;
 	private JTextField txtData;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			BaixarVencimento dialog = new BaixarVencimento();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 */
-	public BaixarVencimento() {
+    
+	
+	public BaixarVencimento(Connection conexao, Produto produto) {
 		setTitle("Baixa de Estoque por Vencimento");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -142,6 +136,23 @@ public class BaixarVencimento extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+	
+	protected void btnSalvar_actionPerformed(ActionEvent e, Connection conexao) {
+		// TODO Auto-generated method stub
+		Produto Produto = new Produto();
+		
+		Produto.setCodigo(Integer.parseInt(txtCodigo.getText()));
+		Produto.setMargemLucro(Float.parseFloat(txtQuantidade.getText()));
+		try {
+			ManipulacaoBaixaProduto.BaixaEstoque_Atualiza(Produto, conexao);
+			this.dispose();
+		} catch (NegocioException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e1.getMessage());
+		}
+		
+		
 	}
 
 }
