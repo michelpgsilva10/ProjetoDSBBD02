@@ -11,7 +11,10 @@ import entidades.GrupoProduto;
 import entidades.Produto;
 import exception.NegocioException;
 import model.EstoqueProdutoTableModel;
+import model.GrupoProdutoTableModel;
 import model.ProdutoTableModel;
+import negocio.ManipulacaoBaixaProduto;
+import negocio.ManipulacaoGrupoProduto;
 import negocio.ManutencaoProduto;
 import util.ConexaoBD;
 
@@ -61,9 +64,9 @@ public class PrincipalEstoqueProduto extends JFrame {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(this, e1.getMessage());
 		}
+	
 		
-		
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -96,8 +99,13 @@ public class PrincipalEstoqueProduto extends JFrame {
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.SOUTH);
 		
-		JButton btnBaixarVencimento = new JButton("Baixar (Vencimento)");
-		panel_1.add(btnBaixarVencimento);
+
+		JButton btnBaixarVencimento1 = new JButton("Baixar (Vencimento)");
+		btnBaixarVencimento1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		panel_1.add(btnBaixarVencimento1);
 		
 		JButton btnBaixarDefeito = new JButton("Baixar (Defeito)");
 		panel_1.add(btnBaixarDefeito);
@@ -108,10 +116,47 @@ public class PrincipalEstoqueProduto extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
+		btnBaixarVencimento1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				btnBaixarVencimento_actionPerformed(e, conexaoBanco.getConexao());
+			}
+		});
+		
 		table = new JTable();
 		table.setModel(new EstoqueProdutoTableModel(produtos));
 		scrollPane.setViewportView(table);
 	
+	}
+protected void btnBaixarVencimento_actionPerformed(ActionEvent e, Connection conexao) {
+		
+		try {
+			produtos = ManipulacaoBaixaProduto.listarProduto(conexao);
+			
+			if (table.getSelectedRow() != -1) {
+				Produto produto = produtos.get(table.getSelectedRow());
+				
+				BaixarVencimento telaAtualizar = new BaixarVencimento(conexao,produto);	
+				telaAtualizar.setLocationRelativeTo(this);
+				telaAtualizar.setResizable(false);
+				telaAtualizar.setModal(true);
+				telaAtualizar.setVisible(true);
+				
+				produtos = ManipulacaoBaixaProduto.listarProduto(conexao);
+				
+			
+			} else
+				JOptionPane.showMessageDialog(this, "Selecione um produto na tabela!");
+			
+		} catch (NegocioException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e1.getMessage());
+		}		
+		
+		table.setModel(new ProdutoTableModel(produtos));		
+		
 	}
 
 	protected void btnFiltrar_actionPerformed(ActionEvent arg0, Connection conexao) {
