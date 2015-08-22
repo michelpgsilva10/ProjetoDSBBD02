@@ -128,7 +128,7 @@ public class ManutencaoProduto {
 			}
 			resultado.close();
 		} catch (SQLException se) {
-			throw new NegocioException(NegocioException.ERRO_BUSCA);
+			throw new NegocioException(se.getMessage());
 		}
 
 		return Produto;

@@ -1,9 +1,9 @@
 package entidades;
 
 public class Produto {
-	private static int codigo;
+	private int codigo;
 	private String nome;
-	private static int estoque;
+	private int estoque;
 	private float precoCompra;
 	private float margemLucro;
 	private float promocao;
@@ -32,7 +32,7 @@ public class Produto {
 		this.grupoProduto = grupoProduto;
 	}
 	
-	public static int getCodigo() {
+	public int getCodigo() {
 		return codigo;
 	}
 	
@@ -48,7 +48,7 @@ public class Produto {
 		this.nome = nome;
 	}
 	
-	public static int getEstoque() {
+	public int getEstoque() {
 		return estoque;
 	}
 	

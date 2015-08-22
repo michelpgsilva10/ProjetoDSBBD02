@@ -13,14 +13,17 @@ import model.ProdutoTableModel;
 import negocio.ManutencaoProduto;
 import util.ConexaoBD;
 
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JSeparator;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -119,6 +122,15 @@ public class PrincipalProduto extends JFrame {
 			}
 		});
 		
+		btnAlterar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				btnAlterar_actionPerformed(e, conexao.getConexao());
+			}
+		});
+		
 		btnSair.addActionListener(new ActionListener() {
 			
 			@Override
@@ -127,6 +139,27 @@ public class PrincipalProduto extends JFrame {
 				btnSair_actionPerformed(e);
 			}
 		});
+	}
+
+	protected void btnAlterar_actionPerformed(ActionEvent e, Connection conexao) {
+		// TODO Auto-generated method stub
+		if (tblProduto.getSelectedRow() != -1) {
+			AlterarProduto altProduto = new AlterarProduto(conexao, produtos.get(tblProduto.getSelectedRow()));
+			
+			altProduto.setModal(true);
+			altProduto.setResizable(false);
+			altProduto.setLocationRelativeTo(this);
+			altProduto.setVisible(true);
+			
+			try {
+				tblProduto.setModel(new ProdutoTableModel(ManutencaoProduto.listarProduto(conexao)));
+			} catch (NegocioException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+			}			
+		} else
+			JOptionPane.showMessageDialog(this, "Selecione um registro da tabela");		
+		
 	}
 
 	protected void btnSair_actionPerformed(ActionEvent e) {

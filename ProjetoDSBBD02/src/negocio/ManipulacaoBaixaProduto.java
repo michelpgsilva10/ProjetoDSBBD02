@@ -43,8 +43,8 @@ public class ManipulacaoBaixaProduto {
 		try {
 			comando = conexao.prepareStatement("UPDATE PRODUTO" + " SET ESTOQUE=? WHERE CODIGO=?");
 
-			comando.setInt(1, Produto.getEstoque());
-			comando.setInt(2, Produto.getCodigo());
+			comando.setInt(1, codigo.getEstoque());
+			comando.setInt(2, codigo.getCodigo());
 			comando.executeUpdate();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
