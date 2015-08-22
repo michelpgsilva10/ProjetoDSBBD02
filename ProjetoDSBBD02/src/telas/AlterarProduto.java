@@ -21,12 +21,14 @@ import javax.swing.JComboBox;
 
 import negocio.ManipulacaoGrupoProduto;
 import model.GrupoProdutoComboBoxModel;
+import entidades.GrupoProduto;
 import entidades.Produto;
 import exception.NegocioException;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -41,6 +43,8 @@ public class AlterarProduto extends JDialog {
 	private JTextField txtCompra;
 	private JTextField txtPromocao;
 	private JComboBox cmbGrupoProduto;
+	private JButton btnSair;
+	private JButton btnSalvar;
 
 	/**
 	 * Create the dialog.
@@ -291,10 +295,12 @@ public class AlterarProduto extends JDialog {
 			{
 				cmbGrupoProduto = new JComboBox();
 				try {
-					cmbGrupoProduto.setModel(new GrupoProdutoComboBoxModel(ManipulacaoGrupoProduto.listarGrupoProduto(conexao)));
+					ArrayList<GrupoProduto> listaGrupoProduto = ManipulacaoGrupoProduto.listarGrupoProduto(conexao);
+					GrupoProduto grupoProduto = null;
+					
+					cmbGrupoProduto.setModel(new GrupoProdutoComboBoxModel(listaGrupoProduto));					
 					cmbGrupoProduto.getModel().setSelectedItem(produto.getGrupoProduto());
-					//cmbGrupoProduto.setSelectedIndex(1);
-					cmbGrupoProduto.updateUI();
+										
 				} catch (NegocioException e) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(this, e.getMessage());
@@ -308,17 +314,12 @@ public class AlterarProduto extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnSair = new JButton("Sair");
-				btnSair.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-					}
-				});
-				btnSair.setActionCommand("OK");
+				btnSair = new JButton("Sair");				
 				buttonPane.add(btnSair);
 				getRootPane().setDefaultButton(btnSair);
 			}
 			{
-				JButton btnSalvar = new JButton("Salvar");
+				btnSalvar = new JButton("Salvar");
 				btnSalvar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 					}
@@ -327,6 +328,21 @@ public class AlterarProduto extends JDialog {
 				buttonPane.add(btnSalvar);
 			}
 		}
+		
+		btnSair.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				btnSair_actionPerformed(arg0);
+			}
+		});
+		
 	}
+
+	protected void btnSair_actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		this.dispose();
+	}	
 
 }

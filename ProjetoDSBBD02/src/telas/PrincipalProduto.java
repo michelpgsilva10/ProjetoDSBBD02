@@ -13,7 +13,6 @@ import model.ProdutoTableModel;
 import negocio.ManutencaoProduto;
 import util.ConexaoBD;
 
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -28,6 +27,7 @@ import javax.swing.JSeparator;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+@SuppressWarnings("serial")
 public class PrincipalProduto extends JFrame {
 
 	private JPanel contentPane;

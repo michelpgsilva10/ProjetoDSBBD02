@@ -1,12 +1,25 @@
 package entidades;
 
+import validacao.Validacao;
+
 public class Produto {
 	private int codigo;
+	
+	@Validacao(requerido = true)
 	private String nome;
+	
+	@Validacao(requerido = true)
 	private int estoque;
+	
+	@Validacao(requerido = true)
 	private float precoCompra;
+	
+	@Validacao(requerido = true)
 	private float margemLucro;
+	
 	private float promocao;
+	
+	@Validacao(requerido = true)
 	private GrupoProduto grupoProduto;
 	
 	public GrupoProduto getGrupoProduto() {
