@@ -12,11 +12,11 @@ public class ConexaoBD {
 
 	public ConexaoBD() {
 		Connection conexao;
-		String url = "jdbc:postgresql://192.168.200.46:5432/grupo4";
+		String url = "jdbc:postgresql://localhost:5433/DSBBD";
 
 		try {
 			Class.forName("org.postgresql.Driver");
-			conexao = DriverManager.getConnection(url, "grupo4", "grupo4");
+			conexao = DriverManager.getConnection(url, "postgres", "15109");
 			JOptionPane.showMessageDialog(null, "Conexão estabelecida");
 			this.setConexao(conexao);
 
